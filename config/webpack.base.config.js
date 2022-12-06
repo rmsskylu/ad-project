@@ -1,4 +1,7 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const devMode = process.env.NODE_ENV !== 'production';
 
 const webpackBaseConfig = {
   entry: path.join(__dirname, '../src/index.jsx'),
@@ -7,24 +10,34 @@ const webpackBaseConfig = {
     filename: '[name].[fullhash:4].js'
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.tsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      pages: path.join(__dirname, '../src/pages')
+      pages: path.join(__dirname, '../src/pages'),
+      "@utils": path.join(__dirname, '../src/utils')
     }
   },
   module: {
     rules: [
       {
-        test: /\.js[x]/,
+        test: /\.jsx?$/,
         use: 'babel-loader'
       },
       {
-        test: /\.ts[x]/,
-        use: 'ts-loader'
+        test: /\.tsx?$/,
+        use: {
+          loader: 'ts-loader',
+          // options: {
+          //   transpileOnly: true
+          // }
+        }
       },
       {
         test: /\.(sc|c)ss/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
+        use: [
+          devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader'
+        ]
       }
     ]
   }

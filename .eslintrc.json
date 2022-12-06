@@ -58,6 +58,10 @@
           [
             "pages",
             "./src/pages"
+          ],
+          [
+            "@utils",
+            "./src/utils"
           ]
         ],
         "extensions": [
